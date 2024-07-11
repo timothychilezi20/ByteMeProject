@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyFollow : MonoBehaviour
+public class PatrollingAngel : MonoBehaviour
 {
     public GameObject PointA;
     public GameObject PointB;
     public float Speed;
-    public float knockbackForce = 10f;
     public float detectionRadius = 10f;
 
     private Rigidbody2D rb;
-    private Transform CurrentPoint;
+    private Transform currentPoint;
     private Transform player;
     private bool facingRight = false; // my enemy is initially facing left
     private bool isFollowingPlayer = false;
@@ -19,7 +18,7 @@ public class EnemyFollow : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        CurrentPoint = PointB.transform;
+        currentPoint = PointB.transform;
         if (!facingRight)
         {
             Flip();
@@ -41,21 +40,44 @@ public class EnemyFollow : MonoBehaviour
 
         if (isFollowingPlayer)
         {
-            Move();
+            FollowPlayer();
         }
         else
         {
-            rb.velocity = Vector2.zero;
+            Patrol();
         }
     }
 
-    void Move()
+    void FollowPlayer()
     {
-        // Follow the player
+       
         Vector2 direction = (player.position - transform.position).normalized;
         rb.velocity = direction * Speed;
 
-        // Flip the enemy to face the player
+        
+        if (direction.x > 0 && !facingRight)
+        {
+            Flip();
+        }
+        else if (direction.x < 0 && facingRight)
+        {
+            Flip();
+        }
+    }
+
+    void Patrol()
+    {
+      
+        Vector2 direction = (currentPoint.position - transform.position).normalized;
+        rb.velocity = direction * Speed;
+
+        
+        if (Vector2.Distance(transform.position, currentPoint.position) < 0.2f)
+        {
+            currentPoint = (currentPoint == PointA.transform) ? PointB.transform : PointA.transform;
+        }
+
+      
         if (direction.x > 0 && !facingRight)
         {
             Flip();
