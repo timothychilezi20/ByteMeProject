@@ -15,7 +15,7 @@ public class Timer : MonoBehaviour
 
     }
 
-    void Update()
+    public void Update()
     {
         
         if (timerActive)
@@ -40,17 +40,22 @@ public class Timer : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        GameObject collidedObject = other.gameObject;
-
-
-        if (collidedObject.CompareTag("Player"))
+        if(other.tag == "Player")
         {
-            timerActive = true; 
+            timerActive = true;
             Debug.Log("Player entered enemy zone, timer started.");
         }
+        //GameObject collidedObject = other.gameObject;
+
+
+      //  if (collidedObject.CompareTag("Player"))
+        /*{
+            timerActive = true; 
+            Debug.Log("Player entered enemy zone, timer started.");
+        }*/
     }
 
-    void UpdateTimerText()
+    public void UpdateTimerText()
     {
         int minutes = Mathf.FloorToInt(timer / 60);
         int seconds = Mathf.FloorToInt(timer % 60);
